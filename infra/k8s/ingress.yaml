@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: research-ai
+  namespace: research-ai
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: research-ai.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service: {name: research-ai-backend, port: {number: 8000}}
+          - path: /health
+            pathType: Exact
+            backend:
+              service: {name: research-ai-backend, port: {number: 8000}}
+          - path: /
+            pathType: Prefix
+            backend:
+              service: {name: research-ai-frontend, port: {number: 3000}}

@@ -1,0 +1,25 @@
+namespace: research-ai
+frontend:
+  replicaCount: 2
+  image: research-ai-frontend:latest
+  imagePullPolicy: IfNotPresent
+  port: 3000
+backend:
+  replicaCount: 2
+  image: research-ai-backend:latest
+  imagePullPolicy: IfNotPresent
+  port: 8000
+  model: llama-3.3-70b-versatile
+  frontendOrigin: http://research-ai.local
+  existingSecret: research-ai-secrets
+ingress:
+  enabled: true
+  className: nginx
+  host: research-ai.local
+resources:
+  backend:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: "1", memory: 1Gi}
+  frontend:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 512Mi}

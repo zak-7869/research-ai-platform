@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: research-ai-backend
+  namespace: research-ai
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: research-ai-backend}
+  template:
+    metadata:
+      labels: {app: research-ai-backend}
+    spec:
+      containers:
+        - name: backend
+          image: research-ai-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 8000}]
+          envFrom:
+            - configMapRef: {name: research-ai-config}
+            - secretRef: {name: research-ai-secrets}
+          readinessProbe:
+            httpGet: {path: /health, port: 8000}
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet: {path: /health, port: 8000}
+            initialDelaySeconds: 20
+          resources:
+            requests: {cpu: "100m", memory: "256Mi"}
+            limits: {cpu: "1000m", memory: "1Gi"}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: research-ai-backend
+  namespace: research-ai
+spec:
+  selector: {app: research-ai-backend}
+  ports: [{port: 8000, targetPort: 8000}]

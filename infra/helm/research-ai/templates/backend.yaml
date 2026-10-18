@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: research-ai-backend
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels: {app: research-ai-backend}
+  template:
+    metadata:
+      labels: {app: research-ai-backend}
+    spec:
+      containers:
+        - name: backend
+          image: {{ .Values.backend.image | quote }}
+          imagePullPolicy: {{ .Values.backend.imagePullPolicy }}
+          ports: [{containerPort: {{ .Values.backend.port}}}]
+          envFrom:
+            - configMapRef: {name: research-ai-config}
+            - secretRef: {name: {{ .Values.backend.existingSecret }}}
+          readinessProbe:
+            httpGet: {path: /health, port: {{ .Values.backend.port }}}
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet: {path: /health, port: {{ .Values.backend.port }}}
+            initialDelaySeconds: 20
+          resources:
+{{ toYaml .Values.resources.backend | indent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: research-ai-backend
+  namespace: {{ .Values.namespace }}
+spec:
+  selector: {app: research-ai-backend}
+  ports: [{port: {{ .Values.backend.port }}, targetPort: {{ .Values.backend.port }} }]

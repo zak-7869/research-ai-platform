@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: research-ai-frontend
+  namespace: research-ai
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: research-ai-frontend}
+  template:
+    metadata:
+      labels: {app: research-ai-frontend}
+    spec:
+      containers:
+        - name: frontend
+          image: research-ai-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 3000}]
+          resources:
+            requests: {cpu: "100m", memory: "128Mi"}
+            limits: {cpu: "500m", memory: "512Mi"}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: research-ai-frontend
+  namespace: research-ai
+spec:
+  selector: {app: research-ai-frontend}
+  ports: [{port: 3000, targetPort: 3000}]

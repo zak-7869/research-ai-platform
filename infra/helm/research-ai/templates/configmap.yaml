@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: research-ai-config
+  namespace: {{ .Values.namespace }}
+data:
+  GROQ_MODEL: {{ .Values.backend.model | quote }}
+  FRONTEND_ORIGIN: {{ .Values.backend.frontendOrigin | quote }}

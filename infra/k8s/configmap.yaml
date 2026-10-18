@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: research-ai-config
+  namespace: research-ai
+data:
+  GROQ_MODEL: "llama-3.3-70b-versatile"
+  FRONTEND_ORIGIN: "http://research-ai.local"
