@@ -1,0 +1,1 @@
+```[![Architecture diagram of zak-7869/research-ai-platform](https://gitdiagram.com/zak-7869/research-ai-platform/diagram.png)](https://gitdiagram.com/zak-7869/research-ai-platform?utm_source=readme&utm_medium=picture)```
